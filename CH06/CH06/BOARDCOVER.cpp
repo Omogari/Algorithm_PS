@@ -1,22 +1,28 @@
 #include<iostream>
+#include<vector>
 using namespace std;
 
 int h, w;
-bool board[20][20];
 char piece;	//'#' OR '.'
-bool * head;
+int coverType[4][3][2] = {
+	{ { 0,0 },{ 1,0 },{ 0,1 } },
+	{ { 0,0 },{ 1,1 },{ 0,1 } },
+	{ { 0,0 },{ 1,0 },{ 1,1 } },
+	{ { 0,0 },{ 1,0 },{ 1,-1 } },
+};
 
-int countCovering(bool * head) {
+int countCovering(vector<vector<int>> &board, int y, int x, int delta) {
 	int ret = 0;
 
-	//if *head arrive at last piece, and the piece is true, then it is successful case.
-	if (*head == board[h - 1][w - 1] && board[h - 1][w - 1] == true) return 1;
+	//Base case
+	if () return 1;
 
-	if (*head == true) {
-		head++;
-	}
-	else {
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 3; j++) {
+			int ny = y + coverType[i][j][1];
+			int nx = x + coverType[i][j][0];
 
+		}
 	}
 
 
@@ -32,12 +38,12 @@ int main(void) {
 
 		//Initialize Board
 		cin >> h >> w;
-		memset(board, false, sizeof(board));
+		vector<vector<int>> board(h, vector<int>(w, 0));
 		for (int j = 0; j < h; j++) {
 			for (int k = 0; k < w; k++) {
 				cin >> piece;
 				if (piece == '#') {
-					board[j][k] = true;
+					board[j][k] = 1;
 				}
 				else {
 					countWhitePiece++;
