@@ -11,22 +11,45 @@ int coverType[4][3][2] = {
 	{ { 0,0 },{ 1,0 },{ 1,-1 } },
 };
 
-int countCovering(vector<vector<int>> &board, int y, int x, int delta) {
-	int ret = 0;
+bool set(vector<vector<int>> &board, int y, int x, int type, int delta) {
+	
+	bool ret = false;
+	int ny, nx;
 
-	//Base case
-	if () return 1;
+	for (int i = 0; i < 3; i++) {
+		ny = y + coverType[type][i][1];
+		nx = x + coverType[type][i][0];
 
-	for (int i = 0; i < 4; i++) {
-		for (int j = 0; j < 3; j++) {
-			int ny = y + coverType[i][j][1];
-			int nx = x + coverType[i][j][0];
-
+		if (ny<0 || ny>=board.size() || nx<0 || nx>=board[0].size()) {
+			ret = false;
+			break;
 		}
+		else {
+			ret = true;
+		}
+
+
 	}
 
+	return ret;
+}
 
+int cover(vector<vector<int>> &board) {
+	int ret = 0;
 
+	int y = -1, x = -1;
+	for (int i = 0; i < board.size(); i++) {
+		for (int j = 0; j < board[0].size(); j++) {
+			if (board[i][j] == 0) {
+				y = i;
+				x = j;
+				break;
+			}
+		}
+		if (y != -1) break;
+	}
+
+	return ret;
 }
 
 int main(void) {
