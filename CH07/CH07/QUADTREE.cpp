@@ -3,8 +3,15 @@
 #include<string>
 using namespace std;
 
-vector<char> section;
-vector<vector<char>> quadTree(4, vector<char>());
+string quadTree(string &str) {
+	if (str.compare("w") == 0) return "w";
+	if (str.compare("b") == 0) return "b";
+
+	if (str.at(0) == 'x') {
+		//??
+	}
+	
+}
 
 int main(void) {
 
@@ -12,15 +19,11 @@ int main(void) {
 	cin >> num;
 	for (int a = 0; a < num; a++) {
 
-		vector<string> v;
 		string input;
-		while (getline(cin, input)) {
-			v.push_back(input);
-		}
+		cin >> input;
+		
 
-		for (int i = 0; i < v.size(); i++) {
-			cout << v[i] << " ";
-		}
+
 
 	}
 	return 0;
