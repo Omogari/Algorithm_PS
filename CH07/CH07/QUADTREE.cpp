@@ -3,14 +3,18 @@
 #include<string>
 using namespace std;
 
-string quadTree(string &str) {
-	if (str.compare("w") == 0) return "w";
-	if (str.compare("b") == 0) return "b";
+string quadTreeReverse(string::iterator &it) {
+	char head = *it;
+	it++;
 
-	if (str.at(0) == 'x') {
-		//??
-	}
-	
+	//base case
+	if (head == 'w' || head == 'b') return string(1, head);
+
+	string upLeft = quadTreeReverse(it);
+	string upRight = quadTreeReverse(it);
+	string downLeft = quadTreeReverse(it);
+	string downRight = quadTreeReverse(it);
+	return string("x") + downLeft + downRight + upLeft + upRight;
 }
 
 int main(void) {
@@ -22,8 +26,8 @@ int main(void) {
 		string input;
 		cin >> input;
 		
-
-
+		string::iterator it = input.begin();
+		cout << quadTreeReverse(it) << endl;
 
 	}
 	return 0;
