@@ -17,14 +17,13 @@ const int clockSwitch[10][16] = {
 	{ 0,0,0,1,1,1,0,0,0,1,0,0,0,1,0,0 }
 };
 
-vector<int> push(vector<int> &clocks, const int sw[16]) {
+void push(vector<int> &clocks, int sw) {
 	for (int i = 0; i < 16; i++) {
-		clocks[i] += sw[i];
+		clocks[i] += clockSwitch[sw][i];
 		if (clocks[i] == 4) {
 			clocks[i] = 0;
 		}
 	}
-	return clocks;
 }
 
 bool checkTwelve(vector<int> &clocks) {
@@ -38,16 +37,15 @@ bool checkTwelve(vector<int> &clocks) {
 	return ret;
 }
 
-int solve(vector<int> &clocks, const int clockSwitch[10][16], int sw) {
-	int ret = 0;
-	if (sw == 10) return ret;
+int solve(vector<int> &clocks, int sw) {
+	//if all switches were pushed, check where clocks point out.
+	if (sw == 10) return checkTwelve(clocks) ? 0 : INF;
 
-	//base case
-	if (checkTwelve(clocks)) return 1;
-
+	int ret = INF;
 	for (int count = 0; count < 4; count++) {
-		ret = min(ret, count + solve(clocks, clockSwitch, sw+1));
-		push(clocks, clockSwitch[sw]);
+		ret = min(ret, count + solve(clocks, sw + 1));
+		//cout << ret;
+		push(clocks, sw);
 	}
 	return ret;
 }
@@ -66,7 +64,7 @@ int main(void) {
 			clocks[i] = clocks[i] / 3 - 1;
 		}
 
-		int ret = solve(clocks, clockSwitch, 0);
+		int ret = solve(clocks, 0);
 		if (ret >= INF) {
 			cout << -1 << endl;
 		}
