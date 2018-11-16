@@ -8,20 +8,32 @@ int fenceArea(vector<int> &fence) {
 	//base case
 	if (fence.size() == 1) return fence[0];
 
-	int mid = (fence.size() - 1) / 2;
-	vector<int> fenceLeft = vector<int>(fence.begin(), fence.begin()+mid);
-	vector<int> fenceRight = vector<int>(fence.begin()+(mid+1), fence.end());
+	int mid = fence.size() / 2;
+	vector<int> fenceLeft;
+	vector<int> fenceRight;
+
+	if (fence.size() % 2 == 0) {
+		fenceLeft.resize(mid);
+		fenceRight.resize(mid);
+	}
+	else {
+		fenceLeft.resize(mid);
+		fenceRight.resize(mid + 1);
+	}
+	copy(fence.begin(), fence.begin() + mid, fenceLeft.begin());
+	copy(fence.begin() + mid, fence.end(), fenceRight.begin());
+	
 
 	int ret = max(fenceArea(fenceLeft), fenceArea(fenceRight));
 
 	//the case when maximal rectangular cover both left side and right side 
-	int coverRec = 2 * min(fence[mid], fence[mid + 1]);
+	int coverRec = 2 * min(fence[mid - 1], fence[mid]);
 	ret = max(ret, coverRec);
-	int left = mid;
-	int right = mid + 1;
+	int left = mid - 1;
+	int right = mid;
 
-	while (left >= 0 || right < fence.size()) {
-		if (left == 0 || fence[left - 1] <= fence[right + 1] && (right < fence.size()-1)) {
+	while (left > 0 && right < fence.size() - 1) {
+		if (left == 0 || fence[left - 1] <= fence[right + 1]) {
 			right++;
 			coverRec = (right - left + 1) * min(ret/(right - left), fence[right]);
 		}
