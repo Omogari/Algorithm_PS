@@ -1,0 +1,56 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+
+int fenceArea(vector<int> &fence) {
+
+	//base case
+	if (fence.size() == 1) return fence[0];
+
+	int mid = (fence.size() - 1) / 2;
+	vector<int> fenceLeft = vector<int>(fence.begin(), fence.begin()+mid);
+	vector<int> fenceRight = vector<int>(fence.begin()+(mid+1), fence.end());
+
+	int ret = max(fenceArea(fenceLeft), fenceArea(fenceRight));
+
+	//the case when maximal rectangular cover both left side and right side 
+	int coverRec = 2 * min(fence[mid], fence[mid + 1]);
+	ret = max(ret, coverRec);
+	int left = mid;
+	int right = mid + 1;
+
+	while (left >= 0 || right < fence.size()) {
+		if (left == 0 || fence[left - 1] <= fence[right + 1] && (right < fence.size()-1)) {
+			right++;
+			coverRec = (right - left + 1) * min(ret/(right - left), fence[right]);
+		}
+		else {
+			left--;
+			coverRec = (right - left + 1) * min(ret / (right - left), fence[left]);
+		}
+		ret = max(ret, coverRec);
+	}
+	return ret;
+}
+
+int main(void) {
+
+	int num;
+	cin >> num;
+	
+	for (int a = 0; a < num; a++) {
+
+		int N;
+		cin >> N;
+		vector<int> fence(N);
+		for (int i = 0; i < N; i++) {
+			cin >> fence[i];
+		}
+
+		cout << fenceArea(fence) << endl;
+
+	}
+
+	return 0;
+}
