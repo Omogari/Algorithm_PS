@@ -32,16 +32,23 @@ int fenceArea(vector<int> &fence) {
 	int left = mid - 1;
 	int right = mid;
 
-	while (left > 0 && right < fence.size() - 1) {
-		if (left == 0 || fence[left - 1] <= fence[right + 1]) {
-			right++;
-			coverRec = (right - left + 1) * min(ret/(right - left), fence[right]);
+	while (left >= 0 && right <= fence.size() - 1) {
+		if (right < fence.size() - 1) {
+			if (left == 0 || fence[left - 1] <= fence[right + 1]) {
+				right++;
+				coverRec = (right - left + 1) * min(coverRec / (right - left), fence[right]);
+			}
+			else if (fence[left - 1] > fence[right + 1]) {
+				left--;
+				coverRec = (right - left + 1) * min(coverRec / (right - left), fence[left]);
+			}
 		}
-		else {
+		else if (left > 0) {
 			left--;
-			coverRec = (right - left + 1) * min(ret / (right - left), fence[left]);
+			coverRec = (right - left + 1) * min(coverRec / (right - left), fence[left]);
 		}
 		ret = max(ret, coverRec);
+		if (left == 0 && right == fence.size() - 1) break;
 	}
 	return ret;
 }
