@@ -1,51 +1,41 @@
 /* LIS.cpp */
 
 #include <iostream>
-#include <vector>
+#include <cstring>
+#include <algorithm>
 using namespace std;
 
-int currentLISSize;
+int S[500], cache[501], N;
 
-int findLIS(vector<int> seq){
+int findLIS(int start){
+    //memoization
+    int &ret = cache[start + 1];
+    if(ret != -1) return ret;
     
-    //cause we find max size of LIS
-    if(seq.size() == currentLISSize) return currentLISSize;
-    
-    //check seq vector is LIS
-    bool checkLIS = true;
-    for(int i=0; i<seq.size() - 1; ++i){
-        if(seq[i] >= seq[i+1]){
-            checkLIS = false;
-            break;
+    ret = 1;
+    for(int next = start + 1; next <N; ++next){
+        if(start == -1 || S[start] < S[next]){
+            ret = max(ret, findLIS(next) + 1);
         }
     }
-    
-    //base case
-    //if(checkLIS) return seq.size();
-    
-    for(vector<int>::iterator it=seq.begin(); it != seq.end(); ++it){
-        int temp = seq.back();
-        seq.pop_back();
-        //recursive findLIS
-        seq.push_back(temp);
-    }
-    return currentLISSize;
+    return ret;
 }
 
 int main(void){
     
-    int num, N;
+    int num;
     cin >> num;
     
     for(int a=0; a<num; ++a){
         cin >> N;
-        vector<int> seq(N);
+        memset(cache, -1, sizeof(cache));
         for(int i=0; i<N; ++i){
-            cin >> seq[i];
+            cin >> S[i];
         }
         
-        currentLISSize = 1;
-        cout << findLIS(seq) << endl;
+        //search all indices
+        int start = -1;
+        cout << findLIS(start) - 1 << endl;
     }
     
     return 0;
