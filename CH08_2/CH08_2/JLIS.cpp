@@ -1,21 +1,32 @@
 /* LIS.cpp */
 
 #include <iostream>
+#include <algorithm>
 #include <cstring>
 using namespace std;
 
-int N[100], M[100];
+int m, n, M[100], N[100];
 int cache[101][101];
 const long long NEGINF = numeric_limits<long long>::min();
 
-int findJLIS(int indexN, int indexM){
+int findJLIS(int indexM, int indexN){
     //memoization
     int &ret = cache[indexM + 1][indexN + 1];
     if(ret != -1) return ret;
     
-    ret = 2;
+    ret = 0;
+    long long a = (indexM == -1 ? NEGINF : M[indexM]);
+    long long b = (indexN == -1 ? NEGINF : N[indexN]);
+    long long maxElement = max(a, b);
     
-    
+    for(int nextM = indexM + 1; nextM < m; ++nextM){
+        if(maxElement < M[nextM])
+            ret = max(ret, findJLIS(nextM, indexN) + 1);
+    }
+    for(int nextN = indexN + 1; nextN < n; ++nextN){
+        if(maxElement < N[nextN])
+            ret = max(ret, findJLIS(indexM, nextN) + 1);
+    }
     
     return ret;
 }
@@ -25,14 +36,13 @@ int main(void){
     cin >> num;
     
     for(int a=0; a<num; ++a){
-        int n, m;
-        cin >> n >> m;
+        cin >> m >> n;
         
-        for(int i=0; i<n; ++i){
-            cin >> N[i];
-        }
         for(int i=0; i<m; ++i){
             cin >> M[i];
+        }
+        for(int i=0; i<n; ++i){
+            cin >> N[i];
         }
         memset(cache, -1, sizeof(cache));
         cout << findJLIS(-1, -1) << endl;
