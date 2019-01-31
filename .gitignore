@@ -5,6 +5,7 @@
 *.vcxproj
 *.vcxproj.filters
 *.xcodeproj*
+out/
 
 # User-specific files
 *.suo
