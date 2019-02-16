@@ -12,7 +12,7 @@ public class POLY {
         while(loop-- > 0) {
             int n = scan.nextInt();
 
-            
+
         }
     }
 }
