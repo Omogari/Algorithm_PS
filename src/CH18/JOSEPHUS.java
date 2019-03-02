@@ -1,7 +1,6 @@
-package CH19;
+package CH18;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class JOSEPHUS {
