@@ -1,6 +1,7 @@
 package CH21;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class FORTRESS {
@@ -8,30 +9,66 @@ public class FORTRESS {
     private int[] x;
     private int[] y;
     private int[] radius;
-    private int[] height; // depth of tree
+    private int fortresses;
+    private int longest;
 
     public FORTRESS(int fortresses) {
         x = new int[fortresses];
         y = new int[fortresses];
         radius = new int[fortresses];
-        height = new int[fortresses];
+        this.fortresses = fortresses;
     }
 
-    public void countHeightOfFortress(int x, int y, int radius, int index) {
-        if (index == 0) { // first fortress (root of tree)
-            height[index] = 0;
-            return;
-        }
+    public class TreeNode {
+        private ArrayList<TreeNode> children = new ArrayList<>();
+    }
 
-        int height = 0;
-        for (int i = 0; i < index; i++) {
-            double distBetweenTwoCenter = Math.sqrt(Math.pow((this.x[i] - x), 2) + Math.pow((this.y[i] - y), 2));
-            if (distBetweenTwoCenter < this.radius[i] + radius) { // 비교대상 원 안으로 들어가는 경우 : tree의 깊이 1 증가
-                height++;
+    public TreeNode getTree(int rootIdx) {
+        TreeNode ret = new TreeNode();
+        for (int i = 0; i < fortresses; i++) {
+            if (isChild(rootIdx, i)) {
+                ret.children.add(getTree(i));
             }
         }
-        this.height[index] = height;
+        return ret;
+    }
 
+    public boolean encloses(int fort1, int fort2) {
+        double distBetweenTwoCenters = Math.pow((x[fort1] - x[fort2]), 2) + Math.pow((y[fort1] - y[fort2]), 2);
+        return radius[fort1] > radius[fort2] && distBetweenTwoCenters < Math.pow((radius[fort1] - radius[fort2]), 2);
+    }
+
+    public boolean isChild(int parent, int child) {
+        if (!encloses(parent, child)) return false;
+        for (int i = 0; i < fortresses; i++) {
+            if (i != parent && i != child && encloses(parent, i) && encloses(i, child)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public int height(TreeNode root) {
+        if (root.children.isEmpty()) return 0;
+
+        int[] heights = new int[root.children.size()];
+        for (int i = 0; i < heights.length; i++) {
+            heights[i] = height(root.children.get(i));
+        }
+
+        // find the largest value and second largest value
+        Arrays.sort(heights);
+        if (heights.length >= 2)
+            longest = Math.max(longest, 2 + heights[heights.length - 2] + heights[heights.length - 1]);
+
+        return 1 + heights[heights.length - 1];
+    }
+
+    public int solve(TreeNode root) {
+        longest = 0;
+        int depth = height(root);
+
+        return Math.max(longest, depth);
     }
 
     public static void main(String[] args) {
@@ -47,34 +84,9 @@ public class FORTRESS {
                 fortress.x[i] = scan.nextInt();
                 fortress.y[i] = scan.nextInt();
                 fortress.radius[i] = scan.nextInt();
-
-                fortress.countHeightOfFortress(fortress.x[i], fortress.y[i], fortress.radius[i], i);
             }
-
-
-        }
-    }
-
-    public class TreeNode {
-        private int x;
-        private int y;
-        private int radius;
-        private ArrayList<TreeNode> children;
-
-        public TreeNode(int x, int y, int radius) {
-            this.x = x;
-            this.y = y;
-            this.radius = radius;
-            children = new ArrayList<>();
-        }
-
-        
-
-        public boolean setTreeNode(TreeNode tn) {
-            double distBetweenTwoCenter = Math.sqrt(Math.pow((x - tn.x), 2) + Math.pow((y - tn.y), 2));
-            if (distBetweenTwoCenter < radius + tn.radius) { // 비교대상 원 안으로 들어가는 경우 : tree의 깊이 1 증가
-
-            }
+            TreeNode root = fortress.getTree(0);
+            System.out.println(fortress.solve(root));
         }
     }
 }
